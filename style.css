@@ -1,0 +1,264 @@
+@charset "UTF-8";
+
+*{
+    margin: 0;
+    padding: 0;
+}
+
+html, body{
+    width: 100%;
+    height: 100%;
+}
+
+#wrap{
+    width: 80%;
+    height: 100%;
+    margin: 0 auto;
+}
+
+.edit{
+    float: left;
+    width: 10%;
+    height: 50%;
+    margin: 50px 0 0 80px;
+}
+
+.edit > button{
+    color: white;
+    background-color: gray;
+    margin-bottom: 10px;
+    cursor: pointer;
+    width: 100px;
+    height:43px;
+    border-radius: 5px;
+}
+
+.screen{
+    position: relative;
+    width: 850px;
+    height: 480px;
+    left: 20%;
+    top: 5%;
+    background-color: gray;
+    text-align: center;
+    font-size: 35px;
+    color: white;
+    z-index: 0;
+}
+
+#screen_text{
+    position: absolute;
+    left: 50%; 
+    top: 50%;
+    line-height: 450px;
+    transform: translate(-50%, -50%);
+}
+
+.video{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+video{
+    position: absolute;
+    width: 850px;
+    height: 480px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    visibility: hidden;
+}
+
+
+#canvas{
+    width: 850px;
+    height: 480px;
+    overflow: hidden;
+    position: absolute;
+    left: 0%;
+    top: 0%;
+}
+
+#canvas > * > *{
+    position: absolute;
+    left: 0%;
+    top: 0%;
+}
+
+.tool{
+    width: 850px;
+    height: 480px;
+}
+
+.tool > *{
+    pointer-events: none;
+}
+
+.tool_rect{
+    position: absolute;
+    border: 4px solid;
+}
+
+.tool_input{
+    position: absolute;
+    background: none;
+    border: 0;
+    padding: 5px;
+    max-width: 100%;
+}
+
+.tool_span{
+    position: absolute;
+    padding: 5px;
+    display: block;
+    float: left;
+
+    border-width: 2px;
+    border-style: solid;
+    border-color: transparent;
+}
+
+.opction{
+    position: absolute;
+    left: 75%;
+    top: 10%;
+    width: 10%;
+    height: 50%;
+    float: right;
+}
+
+#opction{
+    width: 60px;
+    height: 23px;
+    float: right;
+    margin-bottom: 20px;
+}
+
+.time{
+    width: 80%;
+    height: 5%;
+    margin: 50px 0 0 200px;
+    float: left;
+}
+
+.time div, .time p{
+    float: left;
+}
+
+.time p{
+    margin: 0 5px 0 5px;
+}
+
+#edit_start{
+    margin-left: 350px;
+}
+
+.cover_images{
+    float: left;
+    margin-left: 250px;
+    width: 100%;
+    height: 40%;
+}
+
+.cover_images img{
+    width: 10%;
+    margin: 0 15px;
+    cursor: pointer;
+}
+
+#track{
+    width: 850px;
+    margin: 130px 0 0 305px;
+    padding: 10px 0;
+    border-left: 1px solid red;
+    position: relative;
+    visibility: hidden;
+}
+
+.timeEl{
+    width: 100%;
+    height: 100%;
+}
+
+.timeEl::before{
+    content: '';
+    cursor: pointer;
+    position: absolute;
+    left: -5.5px;
+    top: -5px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: rgb(238, 65, 65);
+}
+
+.track{
+    width: 100%;
+    height: 100%;
+}
+
+#time_view{
+    width: 100%;
+    height: 30px;
+    margin: 10px 0;
+    visibility: hidden;
+}
+
+.time_track{
+    width: 100%;
+    height: 30px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    background-color: gray;
+}
+
+#tool_track{
+    height: 100%;
+    float: left;
+}
+
+.left{
+    width: 10px;
+    cursor: w-resize;
+}
+
+.center{
+    width: calc(100% - 20px);
+}
+
+.right{
+    width: 10px;
+    cursor: w-resize;
+}
+
+#bg{
+    width: 850px;
+    height: 30px;
+    position: absolute;
+    left: 0%;
+    top: 0%;
+    background-color: rgb(207, 207, 207);
+    z-index: -1;
+}
+
+#viewLine{
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    position: absolute;
+    left: 0%;
+}
+
+.tool_track{
+    width: 100%;
+    height: 30px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    position: relative;
+    background-color: darkgray;
+}
