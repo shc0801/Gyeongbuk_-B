@@ -1,4 +1,3 @@
-
 class MoviePlayer{
     constructor(app){
         this.app = app;
@@ -11,6 +10,7 @@ class MoviePlayer{
     }
     
     addEvent(){
+        this.frame();
         document.querySelectorAll("img").forEach(movie=>{
             movie.addEventListener("click", (e)=>{
                 //누른 이미지의 아이디(영화) 얻은뒤 업데이트
@@ -94,7 +94,6 @@ class MoviePlayer{
     moviePlay(){
         //재생, 재생시 프래임 반복
         this.app.nowVideo.play();
-        this.frame();
     }
 
     moviePause(){
@@ -111,8 +110,39 @@ class MoviePlayer{
         requestAnimationFrame(() => {
             this.frame();
         });
-        //현재시간
-        this.nowTime = document.querySelector('#nowTime');
-        this.nowTime.innerHTML = this.app.nowVideo.currentTime.time();
+
+        if(this.app.movie){
+            const {currentTime, duration} = this.app.nowVideo;
+            let x = currentTime * this.track.width / duration;
+            this.nowTime = document.querySelector('#nowTime');
+            this.nowTime.innerHTML = this.app.nowVideo.currentTime.time();
+            
+            if(!this.app.cursor){
+                let x = currentTime * this.app.parTrack.offsetWidth / duration;
+                this.app.moveCursor(x);
+            }
+            else 
+                this.app.nowVideo.pause();
+
+            if(this.app.trackAble){
+            this.app.time.forEach(time=>{
+                    if(time.start <= this.app.nowVideo.currentTime && this.app.nowVideo.currentTime <= time.start + time.main){
+                        let viewDom = document.querySelector(`#${time.id}`);
+                        if(viewDom !== null)
+                            viewDom.style.display = 'block';
+                    }
+                    else{
+                        let hideDom = document.querySelector(`#${time.id}`);
+                        if(hideDom !== null)
+                            hideDom.style.display = 'none';
+                    }
+                })
+            }
+        }
+
+    }
+
+    setVideoTime(x){
+        this.app.nowVideo.currentTime = this.app.nowVideo.duration * x / this.app.parTrack.offsetWidth;
     }
 }

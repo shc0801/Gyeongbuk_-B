@@ -6,10 +6,10 @@ class Select{
 
     mousedown(e){
         const {x, y} = this.tool.mousePoint(e);
-        this.clearCanvas();
-        this.clearRect();
-        this.clearText();
-        this.clearTrack();
+        this.tool.clearCanvas();
+        this.tool.clearRect();
+        this.tool.clearText();
+        this.tool.clearTrack();
         this.cheak(e);
         this.startX = x;
         this.startY = y;
@@ -111,55 +111,7 @@ class Select{
         }
     }
 
-    clearCanvas(){
-        if(this.app.canvasNum < 0) return;
-        for(let i = this.app.canvasNum - 1; i >= 0; i--){
-            let line = this.tool.selectPath[i];
-            this.canvasClear = document.querySelector(`.canvas_${i}`);
-            this.ctx = this.canvasClear.getContext("2d");
-
-            //지우고 다시 그리기 (초기화)
-            this.ctx.clearRect(0, 0, this.canvasClear.width, this.canvasClear.height)
     
-            this.ctx.beginPath();
-            for(let j = 0; j < line.length; j++){
-                this.ctx.lineCap = "round";
-                this.ctx.strokeStyle = line[j].color;
-                this.ctx.lineWidth = line[j].w;
-                if(j != 0)
-                    this.ctx.moveTo(line[j-1].x, line[j-1].y);
-                else    
-                    this.ctx.moveTo(line[j].x, line[j].y);
-                this.ctx.lineTo(line[j].x, line[j].y);
-            }
-            this.ctx.stroke();
-            this.tool.move.line = false;
-        }
-    }
-
-    clearRect(){
-        let allRect = document.querySelectorAll(".tool_rect");
-        allRect.forEach(rect=>{
-            rect.style.borderColor = rect.style.backgroundColor;
-            this.tool.move.rect = false;
-        })
-    }
-
-    clearText(){
-        let allText = document.querySelectorAll(".tool_span");
-        allText.forEach(text=>{
-            text.style.borderColor = text.style.backgroundColor;
-            this.tool.move.rect = false;
-        })
-    }
-
-    clearTrack(){
-        let allTrack = document.querySelectorAll(".tool_track");
-        allTrack.forEach(text=>{
-            text.style.backgroundColor = 'darkgray';
-            this.tool.move.rect = false;
-        })
-    }
 
     lineSelect(){
         this.pathNum = this.canvas.classList[2];

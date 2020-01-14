@@ -13,7 +13,6 @@ class Tool{
     }
 
     //class
-    this.viewPort = new Viewport(this.app, this); 
 		this.line = new LineTool(this.app, this);
 		this.rect = new RectTool(this.app, this);
     this.text = new TextTool(this.app, this);
@@ -75,5 +74,55 @@ class Tool{
     let y = clientY - screen.offsetTop;
     y = y < 0 ? 0 : parCanvas.left < y ? parCanvas.left : y;
     return {x: x, y: y};
+  }
+
+  clearCanvas(){
+    if(this.app.canvasNum < 0) return;
+    for(let i = this.app.canvasNum - 1; i >= 0; i--){
+        let line = this.selectPath[i];
+        this.canvasClear = document.querySelector(`.canvas_${i}`);
+        this.ctx = this.canvasClear.getContext("2d");
+
+        //지우고 다시 그리기 (초기화)
+        this.ctx.clearRect(0, 0, this.canvasClear.width, this.canvasClear.height)
+
+        this.ctx.beginPath();
+        for(let j = 0; j < line.length; j++){
+            this.ctx.lineCap = "round";
+            this.ctx.strokeStyle = line[j].color;
+            this.ctx.lineWidth = line[j].w;
+            if(j != 0)
+                this.ctx.moveTo(line[j-1].x, line[j-1].y);
+            else    
+                this.ctx.moveTo(line[j].x, line[j].y);
+            this.ctx.lineTo(line[j].x, line[j].y);
+        }
+        this.ctx.stroke();
+        this.move.line = false;
+    }
+  }
+
+  clearRect(){
+    let allRect = document.querySelectorAll(".tool_rect");
+    allRect.forEach(rect=>{
+        rect.style.borderColor = rect.style.backgroundColor;
+        this.move.rect = false;
+    })
+  }
+
+  clearText(){
+      let allText = document.querySelectorAll(".tool_span");
+      allText.forEach(text=>{
+          text.style.borderColor = text.style.backgroundColor;
+          this.move.rect = false;
+      })
+  }
+
+  clearTrack(){
+      let allTrack = document.querySelectorAll(".tool_track");
+      allTrack.forEach(text=>{
+          text.style.backgroundColor = 'darkgray';
+          this.move.rect = false;
+      })
   }
 }

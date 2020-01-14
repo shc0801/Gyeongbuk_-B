@@ -45,30 +45,43 @@ class App {
         this.MoviePlayer = new MoviePlayer(this);
 
         this.track = null;  
+        this.cursor = false;
 
+        this.parTrack = document.querySelector("#track");
         this.Before = document.querySelector(".timeEl");
         this.move = false;
+
+        this.startTimeDom = document.querySelector("#start_time");
+        this.mainTainDom = document.querySelector("#mainTain_time");
+        
+        this.trackAble = false;
+        this.time = new Array;
         this.addEvent();
     }
 
     addEvent(){
-        // this.Before.addEventListener("mousedown", e=>{
-        //     const {x} = this.mousePoint(e);
-        //     this.move = true;
-        //     this.startX = x;
-        // });
+        this.Before.addEventListener("dragstart", e=>{
+            e.preventDefault();
+            this.cursor = true;
+        })
 
-        // window.addEventListener("mousemove", e=>{
-        //     const {x} = this.mousePoint(e);
-        //     let style = this.Before.style;
+        this.Before.addEventListener("mousedown", e=>{
+            this.cursor = true;
+        })
 
-        //     style.left = x;
-        // });
+        window.addEventListener("mousemove", e=>{
+            if(!this.cursor) return;
+            let width = this.parTrack.offsetWidth;
+            let left = 0;
+            let x = e.clientX - this.parTrack.offsetLeft;
+            x = x < left ? left : x > width ? width : x;
+            this.moveCursor(x);
+            this.MoviePlayer.setVideoTime(x);
+        })
 
-        // window.addEventListener("mouseup", e=>{
-        //     if(!this.move) return;
-        //     this.move = false;
-        // })
+        window.addEventListener("mouseup", e => {
+            this.cursor = false;
+        });
     }
 
     //캔버스 생성
@@ -95,7 +108,11 @@ class App {
         let y = clientY - screen.offsetTop;
         y = y < 0 ? 0 : parCanvas.left < y ? parCanvas.left : y;
         return {x: x, y: y};
-      }
+    }
+    
+    moveCursor(x){
+        this.Before.style.left = x + 'px';
+    }
 }
 
 

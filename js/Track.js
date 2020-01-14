@@ -4,6 +4,7 @@ class Track{
         this.tool = tool;
         this.nowTool = nowTool;
 
+        this.app.trackAble = true;
         this.swap = false;
         this.downTrack = null;       //바꾸는 원소
         this.upTrack = null;       //바뀌는 원소
@@ -34,10 +35,8 @@ class Track{
     addEvent(){
         this.posTrack.forEach(track=>{
             track.addEventListener("mousedown", e=>{
-                console.log(track)
-                this.bg = track.parentElement.lastChild;
-                console.log(this.bg)
                 if(this.tool.nowTool != 'select') return;
+                this.bg = track.parentElement.lastChild;
                 this.nowTrack = e.target.parentElement;
                 const {x} = this.tool.mousePoint(e);
                 this.trackMove = true;
@@ -51,7 +50,9 @@ class Track{
         window.addEventListener("mousemove", e=>{
             if(!this.trackMove) return;
             const {x} = this.tool.mousePoint(e);
-            let left, max, width;
+            let max;
+            let left = x;
+            let width = this.app.parTrack.offsetWidth;
             let style = this.nowTrack.style;
             if(this.pos.classList[0] === 'left'){
                 left = x; 
@@ -74,18 +75,25 @@ class Track{
                 width = width < 0 ? 0 : width > max ? max : width;
                 style.width = width + 'px';
             }
+            let toolId = e.target.parentElement.classList[1];
+            let startTime = this.nowTrack.offsetLeft * this.app.nowVideo.duration / this.app.parTrack.offsetWidth;
+            let mainTainTime = this.nowTrack.offsetWidth * this.app.nowVideo.duration / this.app.parTrack.offsetWidth;
+            this.app.time[this.trackNum] = {start: startTime, main: mainTainTime ,id: toolId}
+
+            this.app.startTimeDom.innerHTML = this.app.time[this.trackNum].start.time();
+            this.app.mainTainDom.innerHTML = this.app.time[this.trackNum].main.time();
         })
 
         window.addEventListener("mouseup", e=>{
             if(!this.trackMove) return;
             this.trackMove = false;
-            this.bg = null;
         })
 
-        this.moveTrack.forEach(track=>{
+        this.moveTrack.forEach((track)=>{
             track.addEventListener("dragstart", e=>{
                 e.stopPropagation();
                 if(e.target.parentElement.classList[0] !== 'track') return;
+                this.trackMove = false;
                 this.downTrack = track;
                 this.swap = true;
             })
@@ -95,13 +103,21 @@ class Track{
                 this.startX = x;
                 this.startY = y;
 
+                this.trackNum = e.target.parentElement.id.slice(6, 7)
+                if(this.app.time[this.trackNum] === undefined){
+                    this.app.time[this.trackNum] = {start: 0, main: this.app.nowVideo.duration};
+                }
+                
+                this.app.startTimeDom.innerHTML = this.app.time[this.trackNum].start.time();
+                this.app.mainTainDom.innerHTML = this.app.time[this.trackNum].main.time();
+
                 this.trackLeft = track.offsetLeft;
                 this.trackTop = track.offsetTop;
                 
-                this.clearCanvas();
-                this.clearRect();
-                this.clearText();
-                this.clearTrack();
+                this.tool.clearCanvas();
+                this.tool.clearRect();
+                this.tool.clearText();
+                this.tool.clearTrack();
                 
                 track.style.backgroundColor = borderColor;
 
@@ -196,55 +212,6 @@ class Track{
             this.ctx.lineTo(line[i].x, line[i].y);
         }
         this.ctx.stroke();
-    }
-
-    clearCanvas(){
-        if(this.app.canvasNum < 0) return;
-        for(let i = this.app.canvasNum - 1; i >= 0; i--){
-            let line = this.tool.selectPath[i];
-            this.canvasClear = document.querySelector(`.canvas_${i}`);
-            this.ctx = this.canvasClear.getContext("2d");
-
-            //지우고 다시 그리기 (초기화)
-            this.ctx.clearRect(0, 0, this.canvasClear.width, this.canvasClear.height)
-    
-            this.ctx.beginPath();
-            for(let j = 0; j < line.length; j++){
-                this.ctx.lineCap = "round";
-                this.ctx.strokeStyle = line[j].color;
-                this.ctx.lineWidth = line[j].w;
-                if(j != 0)
-                    this.ctx.moveTo(line[j-1].x, line[j-1].y);
-                else    
-                    this.ctx.moveTo(line[j].x, line[j].y);
-                this.ctx.lineTo(line[j].x, line[j].y);
-            }
-            this.ctx.stroke();
-            this.tool.move.line = false;
-        }
-    }
-
-    clearRect(){
-        let allRect = document.querySelectorAll(".tool_rect");
-        allRect.forEach(rect=>{
-            rect.style.borderColor = rect.style.backgroundColor;
-            this.tool.move.rect = false;
-        })
-    }
-
-    clearText(){
-        let allText = document.querySelectorAll(".tool_span");
-        allText.forEach(text=>{
-            text.style.borderColor = text.style.backgroundColor;
-            this.tool.move.rect = false;
-        })
-    }
-
-    clearTrack(){
-        this.moveTrack.forEach(text=>{
-            text.style.backgroundColor = 'darkgray';
-            this.tool.move.rect = false;
-        })
     }
 }
 

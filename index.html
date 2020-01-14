@@ -19,6 +19,7 @@
             <button id="delete_all">전부삭제</button>
             <button id="deletion">선택삭제</button>
             <button id="download">다운로드</button>
+            <button id="merge">병합하기</button>
         </div>
         <div class="screen" id="screen">
             <p id="screen_text">동영상을 선택해주세요.</p>
@@ -65,11 +66,11 @@
             </div>
             <p id="edit_start">시작시간</p>
             <div class="edit_start_time">
-                <p>00:00:00:00</p>
+                <p id="start_time">00:00:00:00</p>
             </div>
             <p>유지시간</p>
             <div class="edit_time">
-                <p>00:00:00:00</p>
+                <p id="mainTain_time">00:00:00:00</p>
             </div>
         </div>
         <div id="track">
@@ -91,7 +92,6 @@
 	<script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/App.js"></script>
     <script src="js/MoviePlayer.js"></script>
-    <script src="js/ViewPort.js"></script>
     <script src="js/Track.js"></script>
     <script src="js/Tool.js"></script>
     <script src="js/LineTool.js"></script>
