@@ -94,6 +94,7 @@ class MoviePlayer{
     moviePlay(){
         //재생, 재생시 프래임 반복
         this.app.nowVideo.play();
+        console.log(document.querySelector(`#tool_${this.app.movieId}`))
     }
 
     moviePause(){
@@ -139,10 +140,10 @@ class MoviePlayer{
                 })
             }
         }
-
     }
 
     setVideoTime(x){
         this.app.nowVideo.currentTime = this.app.nowVideo.duration * x / this.app.parTrack.offsetWidth;
     }
 }
+

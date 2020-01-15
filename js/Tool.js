@@ -44,6 +44,8 @@ class Tool{
           this.delete_all(e)
         else if(e.target.id === 'deletion')
           this.deletion(e);
+        else if(e.target.id === 'download')
+          this.download();
       })
     })
 
@@ -176,7 +178,6 @@ class Tool{
 
     this.nowMovie = document.querySelectorAll(`#tool_${this.app.movieId} > *`);
     this.nowMovie.forEach(nowMovie=>{
-      console.log(nowMovie.classList[1].slice(0, 1))
       if(nowMovie.classList[0].slice(0, 1) === 'c'){
 
       }else if(nowMovie.classList[1].slice(0, 1) === 'r'){
@@ -188,13 +189,62 @@ class Tool{
     
     this.nowTrack = document.querySelectorAll(`#track_${this.app.movieId} > *`);
     this.nowTrack.forEach(nowTrack=>{
-      console.log(nowTrack);
     })
-    console.log(this.app.toolList)
     for(let i = deleteNum + 1; i <= this.app.toolList.length - deleteNum; i++){
       this.app.toolList[i - 1] = this.app.toolList[i];
     }
     this.app.toolList.pop();
-    console.log(this.app.toolList)
+  }
+  download(){
+    console.log(this.app.nowVideo, document.querySelectorAll(`#tool_${this.app.movieId}`))
+    let style = this.app.nowVideo.style;
+    style.width = 850 + 'px';
+    style.height = 480 + 'px';
+    style.outline = 0;
+    let html = `<div>
+                  <div class="screen" id="screen" style="position: relative; width: 850px; height: 480px; margin: 0 auto; display: flex; justify-content: center; align-items: center; z-index: 0;">
+                  <video src="${this.app.nowVideo.src}" controls width="850px; height: 480px; outline: 0;" style="position: absolute; left:0%; top:0%;"></video>
+                    let tool = ${document.querySelector(`#tool_${this.app.movieId}`).innerHTML}
+                  </div>
+                  <script>
+                    window.onload = function(){
+                      function frame(){
+                        requestAnimationFrame(() => {
+                            this.frame();
+                        });
+                        tool.style.position = 'absolute';
+                        if(this.app.movie){
+                            const {currentTime, duration} = this.app.nowVideo;
+                            let x = currentTime * this.track.width / duration;
+                            this.nowTime = document.querySelector('#nowTime');
+                            this.nowTime.innerHTML = this.app.nowVideo.currentTime.time();
+                                            
+                            this.app.time.forEach(time=>{
+                              if(time.start <= this.app.nowVideo.currentTime && this.app.nowVideo.currentTime <= time.start + time.main){
+                                  let viewDom = document.querySelector('#'+time.id);
+                                  if(viewDom !== null)
+                                      viewDom.style.display = 'block';
+                              }
+                              else{
+                                  let hideDom = document.querySelector('#'+time.id);
+                                  if(hideDom !== null)
+                                      hideDom.style.display = 'none';
+                              }
+                          })
+                        }
+                      }                                
+                    }
+                  </script>
+                </div>`;
+    let contents = $(html)[0];
+    let blob = new Blob([contents.outerHTML], {type: "text/html"});
+    let url = URL.createObjectURL(blob);
+    
+    let a = document.createElement("a");
+    a.download = "asdasd.html";
+    a.href = url;
+    document.body.append(a);
+    a.click();
+    a.remove();
   }
 }
