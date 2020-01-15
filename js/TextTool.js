@@ -2,20 +2,19 @@ class TextTool{
     constructor(app, tool){
         this.app = app;
         this.tool = tool;
-        this.active = false;
     }
 
     mousedown(e){
         const {x, y} = this.tool.mousePoint(e);
 
-        if(this.active){
+        if(this.tool.active){
             if(this.input.value === '')
                 this.input.remove();
             else{
                 this.input.remove();
                 this.addSpan();
             }
-            this.active = false;
+            this.tool.active = false;
         }
         else{
             this.addInput(x, y);
@@ -42,7 +41,7 @@ class TextTool{
         this.nowMovie = document.querySelector(`#tool_${this.app.movieId}`);
         this.nowMovie.appendChild(this.input);   // create
         this.app.toolNum++;
-        this.active = true;
+        this.tool.active = true;
     }
 
     addSpan(){

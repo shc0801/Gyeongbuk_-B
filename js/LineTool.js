@@ -22,15 +22,18 @@ class LineTool{
     mousemove(e){
         this.savePoint(e); //그릴 때 마다 경로의 좌표, 캔버스의 번호, 색, 너비 저장
         this.draw(); //그리기
+        this.app.ctx.closePath();
     }
 
     mouseup(){
         this.tool.selectPath.push(this.tool.path);  //그린 경로를 넘겨받음
-        this.app.ctx.closePath();
     }
 
     savePoint(e){
-        const { x, y } = this.tool.mousePoint(e);
+        console.log(parCanvas.offsetWidth);
+        let { x, y } = this.tool.mousePoint(e);
+        x = x < 0 ? 0 : x > parCanvas.offsetWidth ? parCanvas.offsetWidth : x;
+        y = y < 0 ? 0 : y > parCanvas.offsetHeight ? parCanvas.offsetHeight : y;
         this.tool.path.push({x: x, y: y, c: this.app.canvasNum, w: this.tool.strokeSize, color: this.tool.color});
     }
 

@@ -5,12 +5,14 @@ class Tool{
     this.path = new Array;   //line 경로
     this.selectPath = new Array;  //line경로 받아서 선택부분에서 사용
     this.selectNum = 0;
+    this.mouse = false;
     
     this.move = {  //select부분에서 움직이는 조건
       line: false,
       rect: false,
       text: false
     }
+    this.active = false;
 
     //class
 		this.line = new LineTool(this.app, this);
@@ -31,27 +33,33 @@ class Tool{
   mouseEvent(){
     //버튼 누를때
     this.toolDom.forEach(tool=>{
-      tool.addEventListener("click", ()=>{
+      tool.addEventListener("click", e=>{
         if(!this.app.movie){ alert("먼저 영화를 선택해주세요!"); return; }
         // 현재툴 = 버튼의 data-tool
         this.nowTool = tool.dataset.tool;
         // 누른 툴 세팅(누른 버튼의 데이터에 따라 마우스 이벤트를 실행하는곳이 바뀌도록 52, 61, 69번쨰줄)
         this.setTool = this[this.nowTool];
+        
+        if(e.target.id === 'delete_all')
+          this.delete_all(e)
+        else if(e.target.id === 'deletion')
+          this.deletion(e);
       })
     })
 
     window.addEventListener("mousedown", e=> {
       if(!this.nowTool || e.which !== 1) return;  //현재 툴이 없거나 좌클릭 아닌경우 리턴
-      e.path.forEach(el=>{
         // 누른 곳이 스크린 내부인 경우에만 실행
-        if(el.id === 'screen') 
-          this.setTool.mousedown(e);
-      })
+        this.mouse = true;
+        e.path.forEach(el=>{
+          if(el.id === 'screen') 
+            this.setTool.mousedown(e);
+        })
     }); 
 
     window.addEventListener("mousemove", e=> {
       if(!this.nowTool || e.which !== 1) return;  //현재 툴이 없거나 좌클릭 아닌경우 리턴
-      if(this.nowTool === 'text') return;
+      if(this.nowTool === 'text' || !this.mouse) return;
       e.path.forEach(el=>{
         if(el.id === 'screen') 
           this.setTool.mousemove(e);
@@ -60,11 +68,24 @@ class Tool{
 
     window.addEventListener("mouseup", e=> {
       if(!this.nowTool || e.which !== 1) return;  //현재 툴이 없거나 좌클릭 아닌경우 리턴
+      if(!this.mouse) return;
       e.path.forEach(el=>{
-        if(el.id === 'screen') 
+        if(el.id === 'screen'){
+          this.mouse = false;
           this.setTool.mouseup(e);
+        }
       });
     }); 
+
+    parCanvas.addEventListener("mouseout", e=>{
+      if(!this.active) return;
+      if(this.nowTool === 'rect')
+        this.setTool.mouseup(e);
+      else if(this.nowTool === 'text'){
+        this.setTool.mousedown(e);
+        this.mouse = false;
+      }
+    })
   }
 
   mousePoint(e){  //^&^
@@ -124,5 +145,56 @@ class Tool{
           text.style.backgroundColor = 'darkgray';
           this.move.rect = false;
       })
+  }
+
+  delete_all(){
+    this.nowMovie = document.querySelectorAll(`#tool_${this.app.movieId} > *`);
+    this.nowMovie.forEach(nowMovie=>{
+      nowMovie.remove();
+    })
+    
+    this.nowTrack = document.querySelectorAll(`#track_${this.app.movieId} > *`);
+    this.nowTrack.forEach(nowTrack=>{
+      nowTrack.remove();
+    })
+    this.app.toolNum = 0; 
+    this.app.canvasNum = 0; 
+    this.app.rectNum = 0; 
+    this.app.spanNum = 0; 
+    this.app.inputNum = 0; 
+    this.app.trackNum = 0;
+
+    this.app.toolList = new Array;
+    this.selectPath = new Array;
+  }
+
+  deletion(){
+    let deleteNum = this.app.selectTool.id.slice(5, 6) - 1;
+    
+    let deleteTool = document.querySelector(`.${this.app.selectTool.id}`).remove()
+    this.app.selectTool.remove();
+
+    this.nowMovie = document.querySelectorAll(`#tool_${this.app.movieId} > *`);
+    this.nowMovie.forEach(nowMovie=>{
+      console.log(nowMovie.classList[1].slice(0, 1))
+      if(nowMovie.classList[0].slice(0, 1) === 'c'){
+
+      }else if(nowMovie.classList[1].slice(0, 1) === 'r'){
+        
+      }else if(nowMovie.classList[1].slice(0, 1) === 's'){
+        
+      }
+    })
+    
+    this.nowTrack = document.querySelectorAll(`#track_${this.app.movieId} > *`);
+    this.nowTrack.forEach(nowTrack=>{
+      console.log(nowTrack);
+    })
+    console.log(this.app.toolList)
+    for(let i = deleteNum + 1; i <= this.app.toolList.length - deleteNum; i++){
+      this.app.toolList[i - 1] = this.app.toolList[i];
+    }
+    this.app.toolList.pop();
+    console.log(this.app.toolList)
   }
 }
